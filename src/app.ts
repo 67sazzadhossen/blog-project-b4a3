@@ -14,9 +14,7 @@ app.use('/api', router);
 
 // Homepage Route
 app.get('/', (req: Request, res: Response) => {
-  res.send({
-    message: 'Welcome to the Blog API',
-  });
+  res.send('Blog project`s server is running');
 });
 
 // Global Error Handler
