@@ -16,23 +16,14 @@ const registerUserIntoDB = async (payload: TUser) => {
 
   const newUser = await User.create(payload);
 
-  const { _id, name, email } = newUser;
-
-  return {
-    _id,
-    name,
-    email,
-  };
+  return newUser;
 };
 
 const loginUserFromDB = async (payload: TLoginUser) => {
   const user = await User.isUserExistsByEmail(payload?.email);
 
   if (!user) {
-    throw new AppError(
-      httpStatus.UNAUTHORIZED,
-      'Invalid Credentials: User Not Found',
-    );
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
 
   const isBlocked = user?.isBlocked;
@@ -42,10 +33,7 @@ const loginUserFromDB = async (payload: TLoginUser) => {
   }
 
   if (!(await User.isPasswordMatched(payload?.password, user?.password))) {
-    throw new AppError(
-      httpStatus.UNAUTHORIZED,
-      'Invalid Credentials: Password',
-    );
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
 
   const jwtPayload = {

@@ -5,12 +5,13 @@ import { UserServices } from './auth.service';
 
 const registerUser = catchAsync(async (req, res) => {
   const result = await UserServices.registerUserIntoDB(req.body);
+  const { _id, name, email } = result;
 
   sendResponse(res, {
     success: true,
     message: 'User registered successfully',
     statusCode: httpStatus.CREATED,
-    data: result,
+    data: { _id, name, email },
   });
 });
 
