@@ -1,22 +1,18 @@
-import { Request, Response } from 'express';
-import { UserServices } from '../user/user.service';
+import { AuthServices } from './auth.service';
+import catchAsync from '../../utils/catchAsync';
+import httpStatus from 'http-status';
+import sendRes from '../../utils/sendRes';
 
-const registerUser = async (req: Request, res: Response) => {
-  try {
-    const result = await UserServices.createUserIntoDB(req.body);
-    res.status(200).json({
-      success: true,
-      message: 'User registered successfully',
-      data: result,
-    });
-  } catch (error) {
-    res.status(200).json({
-      success: false,
-      message: 'Validation error',
-      error,
-    });
-  }
-};
+const registerUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.registerUserIntoDB(req.body);
+  const { _id, name, email } = result;
+  sendRes(res, {
+    success: true,
+    message: 'User registered successfully',
+    statusCode: httpStatus.CREATED,
+    data: { _id, name, email },
+  });
+});
 
 export const AuthController = {
   registerUser,
